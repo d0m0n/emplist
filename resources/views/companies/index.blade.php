@@ -76,7 +76,7 @@
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($companies as $company)
-                                    <tr class="hover:bg-gray-50">
+                                    <tr class="hover:bg-gray-50 cursor-pointer" onclick="window.location='{{ route('companies.show', $company) }}'">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @if($company->logo_image_url)
                                                 <div class="flex-shrink-0 h-10 w-10">
@@ -109,7 +109,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ $company->employees_count ?? 0 }}人
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" onclick="event.stopPropagation();">
                                             <a href="{{ route('companies.show', $company) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">
                                                 詳細
                                             </a>

@@ -89,16 +89,18 @@
                                     </label>
                                 </div>
                                 
-                                <div>
+                                <div id="residence_status_field">
                                     <x-input-label for="residence_status" :value="__('在留資格')" />
                                     <x-text-input id="residence_status" class="block mt-1 w-full" type="text" name="residence_status" :value="old('residence_status')" />
                                     <x-input-error :messages="$errors->get('residence_status')" class="mt-2" />
+                                    <p class="mt-1 text-sm text-gray-500">外国籍の方は必須です</p>
                                 </div>
                                 
-                                <div>
+                                <div id="residence_card_expiry_field">
                                     <x-input-label for="residence_card_expiry" :value="__('在留カード有効期限')" />
                                     <x-text-input id="residence_card_expiry" class="block mt-1 w-full" type="date" name="residence_card_expiry" :value="old('residence_card_expiry')" />
                                     <x-input-error :messages="$errors->get('residence_card_expiry')" class="mt-2" />
+                                    <p class="mt-1 text-sm text-gray-500">外国籍の方は必須です</p>
                                 </div>
                                 
                                 <div>
@@ -401,4 +403,36 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nationalityInput = document.getElementById('nationality');
+            const residenceStatusField = document.getElementById('residence_status_field');
+            const residenceCardExpiryField = document.getElementById('residence_card_expiry_field');
+            const residenceStatusInput = document.getElementById('residence_status');
+            const residenceCardExpiryInput = document.getElementById('residence_card_expiry');
+
+            function toggleResidenceFields() {
+                const isJapanese = nationalityInput.value === '日本';
+                
+                if (isJapanese) {
+                    residenceStatusField.style.display = 'none';
+                    residenceCardExpiryField.style.display = 'none';
+                    residenceStatusInput.removeAttribute('required');
+                    residenceCardExpiryInput.removeAttribute('required');
+                } else {
+                    residenceStatusField.style.display = 'block';
+                    residenceCardExpiryField.style.display = 'block';
+                    residenceStatusInput.setAttribute('required', 'required');
+                    residenceCardExpiryInput.setAttribute('required', 'required');
+                }
+            }
+
+            // 初期状態の設定
+            toggleResidenceFields();
+
+            // 国籍変更時の処理
+            nationalityInput.addEventListener('input', toggleResidenceFields);
+        });
+    </script>
 </x-app-layout>

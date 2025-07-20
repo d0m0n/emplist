@@ -39,10 +39,11 @@
                                 <x-input-label for="job_category" :value="__('職種')" />
                                 <select id="job_category" name="job_category" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                     <option value="">全て</option>
-                                    <option value="現場作業員" {{ request('job_category') == '現場作業員' ? 'selected' : '' }}>現場作業員</option>
-                                    <option value="職長" {{ request('job_category') == '職長' ? 'selected' : '' }}>職長</option>
-                                    <option value="技術者" {{ request('job_category') == '技術者' ? 'selected' : '' }}>技術者</option>
-                                    <option value="管理者" {{ request('job_category') == '管理者' ? 'selected' : '' }}>管理者</option>
+                                    @foreach($jobCategories as $jobCategory)
+                                        <option value="{{ $jobCategory }}" {{ request('job_category') == $jobCategory ? 'selected' : '' }}>
+                                            {{ $jobCategory }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             
@@ -50,11 +51,11 @@
                                 <x-input-label for="nationality" :value="__('国籍')" />
                                 <select id="nationality" name="nationality" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                     <option value="">全て</option>
-                                    <option value="日本" {{ request('nationality') == '日本' ? 'selected' : '' }}>日本</option>
-                                    <option value="中国" {{ request('nationality') == '中国' ? 'selected' : '' }}>中国</option>
-                                    <option value="ベトナム" {{ request('nationality') == 'ベトナム' ? 'selected' : '' }}>ベトナム</option>
-                                    <option value="フィリピン" {{ request('nationality') == 'フィリピン' ? 'selected' : '' }}>フィリピン</option>
-                                    <option value="その他" {{ request('nationality') == 'その他' ? 'selected' : '' }}>その他</option>
+                                    @foreach($nationalities as $nationality)
+                                        <option value="{{ $nationality }}" {{ request('nationality') == $nationality ? 'selected' : '' }}>
+                                            {{ $nationality }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             
@@ -106,9 +107,6 @@
                                             氏名
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            職種
-                                        </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             部署
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -124,16 +122,10 @@
                                             雇入年月日
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            電話番号
-                                        </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             在留期限
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             免許証期限
-                                        </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            退職日
                                         </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             操作
@@ -142,7 +134,7 @@
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($employees as $employee)
-                                    <tr class="hover:bg-gray-50">
+                                    <tr class="hover:bg-gray-50 cursor-pointer" onclick="window.location='{{ route('employees.show', $employee) }}'">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 @if($employee->profile_photo_url)
@@ -161,9 +153,6 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $employee->job_category }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ $employee->department ?: '-' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -177,9 +166,6 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ $employee->hire_date->format('Y/m/d') }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $employee->phone_number }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             @if($employee->residence_card_expiry)
@@ -211,16 +197,7 @@
                                                 <span class="text-gray-400">-</span>
                                             @endif
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            @if($employee->retirement_date)
-                                                <span class="text-red-600 font-bold">
-                                                    {{ $employee->retirement_date->format('Y/m/d') }}
-                                                </span>
-                                            @else
-                                                <span class="text-gray-400">-</span>
-                                            @endif
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" onclick="event.stopPropagation();">
                                             <a href="{{ route('employees.show', $employee) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">
                                                 詳細
                                             </a>

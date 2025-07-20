@@ -56,7 +56,21 @@ class EmployeeController extends Controller
         // 会社一覧を取得
         $companies = Company::active()->orderBy('name')->get();
         
-        return view('employees.index', compact('employees', 'companies'));
+        // 国籍一覧を取得（データベースに存在する国籍のみ）
+        $nationalities = Employee::select('nationality')
+            ->distinct()
+            ->whereNotNull('nationality')
+            ->orderBy('nationality')
+            ->pluck('nationality');
+        
+        // 職種一覧を取得（データベースに存在する職種のみ）
+        $jobCategories = Employee::select('job_category')
+            ->distinct()
+            ->whereNotNull('job_category')
+            ->orderBy('job_category')
+            ->pluck('job_category');
+        
+        return view('employees.index', compact('employees', 'companies', 'nationalities', 'jobCategories'));
     }
 
     public function create()
